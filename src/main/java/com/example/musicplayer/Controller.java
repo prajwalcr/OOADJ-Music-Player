@@ -134,7 +134,7 @@ public class Controller {
         isAutoplay = false;
         volume = 0.1;
         stage = Main.getStage();
-        stage.getIcons().add(new Image(getClass().getResource("images/logo.png").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("logo.png").toExternalForm()));
     }
 
     @FXML
@@ -192,7 +192,10 @@ public class Controller {
         exit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.exit(0);
+
+//                System.exit(0);
+                Stage stage = (Stage) exit.getScene().getWindow();
+                stage.close();
             }
         });
 
@@ -583,7 +586,7 @@ public class Controller {
         path = path.replace("\\", "/");
         path = path.replace(" ", "%20");
         //path = "file:/" + path;
-        path = ClassLoader.getSystemResource("images/Question.PNG").toExternalForm();
+        path = getClass().getResource("Question.PNG").toExternalForm();
         System.out.println(path);
 
         imagePane.setStyle("-fx-background-image: url(\"" + path + "\"); " +

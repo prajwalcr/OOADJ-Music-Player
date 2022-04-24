@@ -41,7 +41,10 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        System.out.println("fsl");
         launch(args);
+        System.out.println("fsl");
+
     }
 
     public static Stage getStage() {
