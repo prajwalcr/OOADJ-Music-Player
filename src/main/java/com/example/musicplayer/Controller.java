@@ -42,10 +42,10 @@ public class Controller {
     private AnchorPane window;
 
     @FXML
-    private AnchorPane playlistNode;
+    private AnchorPane authNode;
 
     @FXML
-    private Pane showPlaylist;
+    private Pane showAuth;
     @FXML
     private Pane exit;
     @FXML
@@ -110,6 +110,15 @@ public class Controller {
     @FXML
     private ToggleButton autoPlayIcon;
 
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
+
 
     @FXML
     private Stage stage;
@@ -129,6 +138,9 @@ public class Controller {
 
     private FadeTransition fadeIn = new FadeTransition();
     private FadeTransition fadeOut = new FadeTransition();
+
+    private String username;
+    private String password;
 
 
     public Controller() {
@@ -173,14 +185,14 @@ public class Controller {
             }
         });
 
-        showPlaylist.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        showAuth.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(playlistNode.isVisible() == true) {
-                    hideTransition(playlistNode);
+                if(authNode.isVisible() == true) {
+                    hideTransition(authNode);
                 }
                 else {
-                    showTransition(playlistNode);
+                    showTransition(authNode);
                 }
             }
         });
@@ -272,6 +284,16 @@ public class Controller {
                     }
                     catch(Exception e) {}
                 }
+            }
+        });
+
+        loginButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println(usernameField.getText()+passwordField.getText());
+                username = usernameField.getText();
+                password = passwordField.getText();
+                func(username, password);
             }
         });
     }
@@ -453,6 +475,11 @@ public class Controller {
 
     public void setMain(Main main) {
         this.main = main;
+    }
+
+    public void func(String username, String password){
+        this.main.username = username;
+        this.main.password = password;
     }
 
 

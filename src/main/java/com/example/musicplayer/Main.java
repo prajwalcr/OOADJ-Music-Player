@@ -27,6 +27,9 @@ public class Main extends Application {
     public static Connection c = null;
     public static Statement stmt = null;
 
+    public static String username;
+    public static String password;
+
 
     public Main() {
 
@@ -75,10 +78,23 @@ public class Main extends Application {
             System.exit(0);
         }
         System.out.println("Opened database successfully");
-        System.out.println("fsl");
 //        launch(args);
         new Thread(()-> launch(args)).start();
-        System.out.println("fsl");
+
+        System.out.println("Authenticate through the app to continue...");
+        int a;
+        while(username == null){
+            try{
+                Thread.sleep(1000);
+            }catch (Exception e){
+                System.out.println(e);
+            }
+
+        }
+
+        System.out.println("Welcome " + username);
+
+
 
 
     }
