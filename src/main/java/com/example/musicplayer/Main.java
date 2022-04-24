@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,8 @@ public class Main extends Application {
 
     private ObservableList<Song> songData = FXCollections.observableArrayList();
     private static Stage primaryStage;
+    private static volatile boolean javaFxLaunched = false;
+
 
     public Main() {}
 
@@ -42,10 +45,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         System.out.println("fsl");
-        launch(args);
+//        launch(args);
+        new Thread(()-> launch(args)).start();
         System.out.println("fsl");
 
     }
+
 
     public static Stage getStage() {
         return Main.primaryStage;

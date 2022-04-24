@@ -193,9 +193,9 @@ public class Controller {
             @Override
             public void handle(MouseEvent event) {
 
-//                System.exit(0);
-                Stage stage = (Stage) exit.getScene().getWindow();
-                stage.close();
+                System.exit(0);
+//                Stage stage = (Stage) exit.getScene().getWindow();
+//                stage.close();
             }
         });
 
