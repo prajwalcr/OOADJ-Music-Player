@@ -93,6 +93,9 @@ public class Controller {
     private ImageView folderChooser;
 
     @FXML
+    private ImageView refresh;
+
+    @FXML
     private ImageView playButton;
     @FXML
     private ImageView pauseButton;
@@ -240,7 +243,39 @@ public class Controller {
                 }
             }
         });
+
+        refresh.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                DirectoryChooser chooser = new DirectoryChooser();
+                File selectedDirectory = chooser.showDialog(stage);
+                if(selectedDirectory == null) {
+                    System.out.println("No directory selected!");
+                }
+                else {
+
+                    try {
+                        if(!(players.isEmpty())) {
+                            players.clear();
+                            System.out.println("new array list");
+                        }
+                        songTable.setItems(songsUrls(selectedDirectory));
+
+                        songTable.setOnMouseClicked((MouseEvent e) -> {
+                            if((e.getClickCount() > 0) && (e.getClickCount() < 2)) {
+                                try {
+                                    takeCare();
+                                }
+                                catch (Exception ex) {};
+                            }
+                        });
+                    }
+                    catch(Exception e) {}
+                }
+            }
+        });
     }
+
 
     public void showSongInfo(Song song) {
         if(song != null) {

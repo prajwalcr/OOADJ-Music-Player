@@ -11,6 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+
 
 public class Main extends Application {
 
@@ -18,8 +24,13 @@ public class Main extends Application {
     private static Stage primaryStage;
     private static volatile boolean javaFxLaunched = false;
 
+    public static Connection c = null;
+    public static Statement stmt = null;
 
-    public Main() {}
+
+    public Main() {
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -44,10 +55,31 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/mvcdb",
+                    "postgres", "postgres");
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SONG;" );
+            while ( rs!=null && rs.next() ) {
+                String user = rs.getString("CUSTOMER");
+                String song = rs.getString("SONG");
+                System.out.println(song);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Opened database successfully");
         System.out.println("fsl");
 //        launch(args);
         new Thread(()-> launch(args)).start();
         System.out.println("fsl");
+
 
     }
 

@@ -206,6 +206,21 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Pane>
+                        <Pane layoutX="50.0" prefHeight="50.0" prefWidth="50.0" styleClass="pane-background">
+                            <children>
+                                <ImageView fx:id="refresh" fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../../../resources/images/music-folder.png" />
+                                    </image>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                </ImageView>
+                            </children>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Pane>
                         <Pane fx:id="showPlaylist" layoutX="550.0" prefHeight="50.0" prefWidth="50.0" styleClass="pane-background">
                             <children>
                                 <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="9.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">

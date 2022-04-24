@@ -7,6 +7,7 @@ module com.example.musicplayer {
     requires com.jfoenix;
     requires mp3agic;
     requires javafx.media;
+    requires java.sql;
 
     opens com.example.musicplayer to javafx.fxml;
     exports com.example.musicplayer;
