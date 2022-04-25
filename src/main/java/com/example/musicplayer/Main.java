@@ -109,9 +109,8 @@ public class Main extends Application {
         do
         {
             System.out.println("1. Search");
-            System.out.println("2. Playlists");
-            System.out.println("3. Podcasts");
-            System.out.println("4. Exit");
+            System.out.println("2. Create Playlist");
+            System.out.println("3. Exit");
             System.out.println("Enter your choice");
             op = ob.nextInt();
             switch(op)
@@ -122,12 +121,13 @@ public class Main extends Application {
                     s.display();
                     break;
                 case 2:
-                    // Create a Playlists Objects
+                    // Create a Create Playlists
+                    Playlists p = new Playlists();
+                    p.createPlaylist();
                     break;
-                case 3:
-                    // Create Podcasts Object
-                    break;
+
                 case 4:
+                    System.exit(0);
                     break;
             }
         }while(op != 4);
@@ -157,9 +157,11 @@ public class Main extends Application {
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS SONGS(TITLE TEXT, ARTIST TEXT, ALBUM TEXT, WIDTH TEXT, DURATION TEXT, PRIMARY KEY(TITLE, ARTIST));";
             stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS PODCASTS(NAME TEXT, SPEAKER TEXT, DURATION TEXT, PRIMARY KEY(NAME, SPEAKER));";
+            stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST), CONSTRAINT  FK_USU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST));";
             stmt.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS(TAG TEXT PRIMARY KEY);";
+            sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS(NAME TEXT, SONG TEXT, PODCAST TEXT, USERNAME TEXT);";
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS_PLAYLISTS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, TAG TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST, TAG), CONSTRAINT FK_USPU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USPS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST), CONSTRAINT FK_USPP FOREIGN KEY(TAG) REFERENCES PLAYLISTS(TAG));";
             stmt.executeUpdate(sql);

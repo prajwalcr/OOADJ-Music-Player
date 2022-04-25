@@ -104,10 +104,57 @@ class searchArtist implements searchDB {
         //System.out.println("Operation done successfully Search Artist");
     }
 }
-//class searchPodcast implements searchDB
-//{
-//// To be implemented
-//}
+class searchPodcast implements searchDB
+{
+    public void find(String podName)
+    {
+
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            System.out.println("Opened database For Searching");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM PODCASTS;" );
+            List<String> pods=new ArrayList<String>();
+            while ( rs.next() ) {
+
+                String  title = rs.getString("title");
+                if(title.indexOf(podName) != -1)
+                {
+                    pods.add(title);
+                }
+
+            }
+            if(pods.size() == 0)
+            {
+                System.out.println("No Podcasts Found with this Name");
+            }
+            else
+            {
+                System.out.println(pods.size() + " Songs Found with name " + podName);
+                for(String s: pods)
+                {
+
+                    System.out.println(s);
+
+                }
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully Search song");
+    }
+}
 class searchAlbum implements searchDB
 {
     public void find(String albumName)
@@ -180,7 +227,10 @@ class SearchFactory {
 
             return new searchAlbum();
         }
-
+        else if(choice.equals("searchpods"))
+        {
+            return new searchPodcast();
+        }
         return null;
     }
 }
@@ -189,7 +239,7 @@ public class Search
     public void display()
     {
         Main.clearScreen();
-        System.out.println("SEARCH and FILTER");
+        System.out.println("SEARCH");
 
         Scanner ob = new Scanner(System.in);
 
@@ -201,6 +251,7 @@ public class Search
             System.out.println("2. Search Artist");
             System.out.println("3. Search Album");
             System.out.println("4. Search Podcast");
+            System.out.println("5. Exit");
             System.out.println("Enter your choice");
             op = ob.nextInt();
             switch(op)
@@ -237,9 +288,17 @@ public class Search
                     s.find(albumname);
                     break;
                 case 4:
+                    System.out.println("Enter Podcast name to Search");
+                    // Reading the \n from the previous input statemtnt
+                    ob.nextLine();
+                    String podname = ob.nextLine();
+                    s = SearchFactory.getData("searchpods");
 
+                    s.find(podname);
+                    break;
+                case 5:
                     break;
             }
-        }while(op != 4);
+        }while(op != 5);
     }
 }

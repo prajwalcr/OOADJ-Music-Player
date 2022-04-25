@@ -1,29 +1,29 @@
 package com.example.musicplayer;
 
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 
-public class Song
-{
+public class Podcast {
     private StringProperty id;
-    private StringProperty artistName;
-    private StringProperty songName;
+    private StringProperty speakerName;
+    private StringProperty name;
     private StringProperty length;
     private StringProperty duration;
     private StringProperty album;
     private StringProperty url;
     private Image image;
 
-    public Song() {}
+    public Podcast() {}
 
-    public Song(String url) {
+    public Podcast(String url) {
         this.url = new SimpleStringProperty(url);
     }
 
-    public Song(String id, String artistName, String songName, String length, String duration, String album, String url) {
+    public Podcast(String id, String speakerName, String name, String length, String duration, String album, String url) {
         this.id = new SimpleStringProperty(id);
-        this.artistName = new SimpleStringProperty(artistName);
-        this.songName = new SimpleStringProperty(songName);
+        this.speakerName = new SimpleStringProperty(speakerName);
+        this.name = new SimpleStringProperty(name);
         this.length = new SimpleStringProperty(length);
         this.duration = new SimpleStringProperty(duration);
         this.album = new SimpleStringProperty(album);
@@ -42,28 +42,28 @@ public class Song
         this.id.set(id);
     }
 
-    public String getArtistName() {
-        return artistName.get();
+    public String getSpeakerName() {
+        return speakerName.get();
     }
 
-    public void setArtistName(String artistName) {
-        this.artistName.set(artistName);
+    public void setSpeakerName(String SpeakerName) {
+        this.speakerName.set(SpeakerName);
     }
 
-    public StringProperty artistNameProperty() {
-        return artistName;
+    public StringProperty speakerNameProperty() {
+        return speakerName;
     }
 
-    public String getSongName() {
-        return songName.get();
+    public String getName() {
+        return name.get();
     }
 
-    public void setSongName(String songName) {
-        this.songName.set(songName);
+    public void setName(String name) {
+        this.name.set(name);
     }
 
-    public StringProperty songNameProperty() {
-        return songName;
+    public StringProperty nameProperty() {
+        return name;
     }
 
     public String getDuration() {
@@ -121,5 +121,4 @@ public class Song
     public void setImage(Image image) {
         this.image = image;
     }
-
 }
