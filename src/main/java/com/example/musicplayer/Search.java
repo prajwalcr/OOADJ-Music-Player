@@ -56,33 +56,131 @@ class searchSong implements searchDB
             System.err.println( e.getClass().getName()+": "+ e.getMessage() );
             System.exit(0);
         }
-        System.out.println("Operation done successfully Search");
+        //System.out.println("Operation done successfully Search song");
     }
 }
-//class searchArtist implements searchDB
-//{
-//;
-//}
+class searchArtist implements searchDB {
+    public void find(String artistName) {
+
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            System.out.println("Opened database For Searching");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS;");
+            List<String> artists = new ArrayList<String>();
+            while (rs.next()) {
+
+                String name = rs.getString("username");
+                int artist = rs.getInt("is_artist");
+                if (artist == 1 && name.indexOf(artistName) != -1) {
+                    artists.add(name);
+                }
+
+            }
+            if (artists.size() == 0) {
+                System.out.println("No Artists Found with this Name");
+            } else {
+                System.out.println(artists.size() + " Artists Found with name " + artistName);
+                for (String a : artists) {
+
+                    System.out.println(a);
+
+                }
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully Search Artist");
+    }
+}
 //class searchPodcast implements searchDB
 //{
-//;
+//// To be implemented
 //}
-//class searchAlbum implements searchDB
-//{
-//;
-//}
+class searchAlbum implements searchDB
+{
+    public void find(String albumName)
+    {
+
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            System.out.println("Opened database For Searching");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM SONGS;" );
+            List<String> songs=new ArrayList<String>();
+            while ( rs.next() ) {
+
+                String  album = rs.getString("album");
+
+                String song = rs.getString("title");
+
+                if(album.equals(albumName))
+                {
+                    System.out.println("Album: " + album + " AlbumName: " + albumName);
+                    songs.add(song);
+                }
+
+            }
+            if(songs.size() == 0)
+            {
+                System.out.println("No Album Found with this Name");
+            }
+            else
+            {
+                System.out.println(songs.size() + " Songs Found in Album " + albumName);
+                for(String s: songs)
+                {
+
+                    System.out.println(s);
+
+                }
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully Search song");
+    }
+}
 class SearchFactory {
     public static searchDB getData(String choice)
     {
         // To add the others later
-        if(choice == "searchsong")
+        if(choice.equals("searchsong"))
         {
             return new searchSong();
         }
-        else if(choice == "searchartist")
+        else if(choice.equals("searchartist"))
         {
-            ;
+            return new searchArtist();
         }
+        else if(choice.equals("searchalbum"))
+        {
+
+            return new searchAlbum();
+        }
+
         return null;
     }
 }
@@ -110,7 +208,7 @@ public class Search
                 case 1:
                     // Create a Search Object
                     System.out.println("Enter Song name to Search");
-                    // BUffer
+                    // Reading the \n from the previous input statemtnt
                     ob.nextLine();
                     String songname = ob.nextLine();
                     s = SearchFactory.getData("searchsong");
@@ -120,12 +218,26 @@ public class Search
                     //songname = ob.next();
                     break;
                 case 2:
-                    // Create a Playlists Objects
+                    System.out.println("Enter Artist name to Search");
+                    // Reading the \n from the previous input statemtnt
+                    ob.nextLine();
+                    String artistname = ob.nextLine();
+                    s = SearchFactory.getData("searchartist");
+
+                    s.find(artistname);
+
                     break;
                 case 3:
-                    // Create Podcasts Object
+                    System.out.println("Enter Album name to Search");
+                    // Reading the \n from the previous input statemtnt
+                    ob.nextLine();
+                    String albumname = ob.nextLine();
+                    s = SearchFactory.getData("searchalbum");
+
+                    s.find(albumname);
                     break;
                 case 4:
+
                     break;
             }
         }while(op != 4);
