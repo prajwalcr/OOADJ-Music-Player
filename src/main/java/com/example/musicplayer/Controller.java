@@ -278,20 +278,33 @@ public class Controller {
         refresh.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                DirectoryChooser chooser = new DirectoryChooser();
-                File selectedDirectory = chooser.showDialog(stage);
-                if(selectedDirectory == null) {
-                    System.out.println("No directory selected!");
-                }
-                else {
+                if(isAuthed){
+                    ObservableList<Song> songData = FXCollections.observableArrayList();
+                    try{
 
-                    try {
-                        if(!(players.isEmpty())) {
-                            players.clear();
-                            System.out.println("new array list");
+                        File allSongs = new File("./allSongs");
+                        File[] files = allSongs.listFiles();
+                        String name;
+                        int i = 0;
+                        for(File file : files) {
+                            if (file.isFile()) {
+                                name = file.getName();
+                                if (name.endsWith("mp3") || name.endsWith("wav")) {
+                                    i++;
+                                    Mp3File mp3 = new Mp3File(file.getPath());
+                                    ID3v2 tag = mp3.getId3v2Tag();
+                                    Song song = new Song(String.valueOf(i), tag.getArtist(), tag.getTitle(), kbToMb(file.length()), secToMin(mp3.getLengthInSeconds()),tag.getAlbum(), file.getAbsolutePath());
+                                    players.add(createPlayer(file.getAbsolutePath()));
+                                    songData.add(song);
+                                }
+                            }
                         }
-                        songTable.setItems(songsUrls(selectedDirectory));
-
+                        setImage();
+                        i = 0;
+                        System.out.println(players.size());
+                        songsCounter.setText("");
+                        songsCounter.setText("Songs: " + players.size());
+                        songTable.setItems(songData);
                         songTable.setOnMouseClicked((MouseEvent e) -> {
                             if((e.getClickCount() > 0) && (e.getClickCount() < 2)) {
                                 try {
@@ -300,10 +313,9 @@ public class Controller {
                                 catch (Exception ex) {};
                             }
                         });
-
-
+                    }catch (Exception e){
+                        System.out.println(e);
                     }
-                    catch(Exception e) {}
                 }
             }
         });
