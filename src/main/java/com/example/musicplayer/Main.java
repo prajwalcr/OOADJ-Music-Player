@@ -16,7 +16,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
-
+/*For menu Driven Section*/
+import java.util.Scanner;
+/**/
 
 public class Main extends Application {
 
@@ -58,6 +60,10 @@ public class Main extends Application {
         primaryStage.setResizable(true);
         primaryStage.show();
     }
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
     public static void main(String[] args) {
         createTables();
@@ -93,8 +99,38 @@ public class Main extends Application {
             }
 
         }
-
+        clearScreen();
         System.out.println("Welcome " + username);
+        /*Menu Driven Section*/
+        Scanner ob = new Scanner(System.in);
+
+        int op;
+
+        do
+        {
+            System.out.println("1. Search");
+            System.out.println("2. Playlists");
+            System.out.println("3. Podcasts");
+            System.out.println("4. Exit");
+            System.out.println("Enter your choice");
+            op = ob.nextInt();
+            switch(op)
+            {
+                case 1:
+                    // Create a Search Object
+                    Search s = new Search();
+                    s.display();
+                    break;
+                case 2:
+                    // Create a Playlists Objects
+                    break;
+                case 3:
+                    // Create Podcasts Object
+                    break;
+                case 4:
+                    break;
+            }
+        }while(op != 4);
 
 
 
