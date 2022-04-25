@@ -152,6 +152,7 @@ public class Controller {
     private String password;
 
     private boolean isArtist;
+    private boolean isAuthed;
 
     public Connection c = null;
     public Statement stmt = null;
@@ -264,6 +265,10 @@ public class Controller {
                                 catch (Exception ex) {};
                             }
                         });
+
+                        if(isAuthed){
+                            songInsert(selectedDirectory);
+                        }
                     }
                     catch(Exception e) {}
                 }
@@ -295,6 +300,8 @@ public class Controller {
                                 catch (Exception ex) {};
                             }
                         });
+
+
                     }
                     catch(Exception e) {}
                 }
@@ -311,6 +318,7 @@ public class Controller {
                 password = passwordField.getText();
                 isArtist = artistCheckBox.isSelected();
                 auth = authenticate(username, password, isArtist);
+                isAuthed = isAuthed || auth;
                 if(auth) {
                     authNode.setVisible(false);
                 }
@@ -363,6 +371,46 @@ public class Controller {
         songsCounter.setText("");
         songsCounter.setText("Songs: " + players.size());
         return  songData;
+    }
+
+    public void songInsert(File dir) throws Exception{
+        File[] files = dir.listFiles();
+        String name, artist;
+        int i = 0;
+        try {
+            for (File file : files) {
+                if (file.isFile()) {
+                    name = file.getName();
+                /*if(name.endsWith("jpg")) {
+                    path = file.getAbsolutePath();
+                }*/
+                    if (name.endsWith("mp3") || name.endsWith("wav")) {
+                        i++;
+                        Mp3File mp3 = new Mp3File(file.getPath());
+                        ID3v2 tag = mp3.getId3v2Tag();
+                        if(isArtist){
+                            artist = this.main.username;
+                        }
+                        else{
+                            artist = tag.getArtist();
+                        }
+                        mp3.save("./allSongs/" + artist + "-_-" + username + "-_-" + name);
+
+                        Class.forName("org.postgresql.Driver");
+                        String sql;
+                        c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                                "postgres", "postgres");
+                        stmt = c.createStatement();
+                        System.out.println("Inserting...");
+                        sql = "INSERT INTO SONGS VALUES(\'" + tag.getTitle() + "\', \'" + artist + "\', \'" + tag.getAlbum() + "\', \'" + kbToMb(file.length()) + "\', \'" + secToMin(mp3.getLengthInSeconds()) + "\') ON CONFLICT (TITLE, ARTIST) DO NOTHING;";
+                        stmt.executeUpdate(sql);
+                        sql = "INSERT INTO USERS_SONGS VALUES(\'" + this.main.username + "\', \'" + tag.getTitle() + "\', \'"+artist+"\') ON CONFLICT (USERNAME, TITLE, ARTIST) DO NOTHING;";
+                        stmt.executeUpdate(sql);
+                        stmt.close();
+                    }
+                }
+            }
+        }catch(IOException e) {e.printStackTrace();}
     }
 
     public void playPauseSong(Song song) throws Exception{
