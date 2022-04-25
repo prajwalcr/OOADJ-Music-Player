@@ -127,6 +127,9 @@ public class Controller {
     private CheckBox artistCheckBox;
 
     @FXML
+    private CheckBox premiumCheckBox;
+
+    @FXML
     private Label authFail;
 
     @FXML
@@ -152,6 +155,7 @@ public class Controller {
     private String password;
 
     private boolean isArtist;
+    private boolean isPremium;
     private boolean isAuthed;
 
     public Connection c = null;
@@ -329,7 +333,8 @@ public class Controller {
                 username = usernameField.getText();
                 password = passwordField.getText();
                 isArtist = artistCheckBox.isSelected();
-                auth = authenticate(username, password, isArtist);
+                isPremium = premiumCheckBox.isSelected();
+                auth = authenticate(username, password, isArtist, isPremium);
                 isAuthed = isAuthed || auth;
                 if(auth) {
                     authNode.setVisible(false);
@@ -557,7 +562,7 @@ public class Controller {
         this.main = main;
     }
 
-    public boolean authenticate(String username, String password, boolean isArtist){
+    public boolean authenticate(String username, String password, boolean isArtist, boolean isPremium){
         int temp = 0;
         if(isArtist){
             temp = 1;
@@ -578,6 +583,7 @@ public class Controller {
                 this.main.username = username;
                 this.main.password = password;
                 this.main.isArtist = isArtist;
+                this.main.isPremium = isPremium;
                 authFail.setVisible(false);
                 stmt.close();
                 rs1.close();
@@ -595,6 +601,7 @@ public class Controller {
                     this.main.username = username;
                     this.main.password = password;
                     this.main.isArtist = isArtist;
+                    this.main.isPremium = isPremium;
                     authFail.setVisible(false);
                     stmt.close();
                     rs2.close();
