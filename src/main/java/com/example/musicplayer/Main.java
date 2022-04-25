@@ -32,6 +32,7 @@ public class Main extends Application {
     public static String username;
     public static String password;
     public static boolean isArtist;
+    public static boolean isPremium;
 
 
     public Main() {
