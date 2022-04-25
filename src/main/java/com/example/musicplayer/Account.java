@@ -1,3 +1,4 @@
+// Liskov Substitution Principle
 package com.example.musicplayer;
 
 public abstract class Account {

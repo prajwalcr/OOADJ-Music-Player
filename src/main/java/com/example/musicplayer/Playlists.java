@@ -1,3 +1,4 @@
+// Open Close Principle
 package com.example.musicplayer;
 
 import java.util.Scanner;
