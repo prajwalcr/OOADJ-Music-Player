@@ -29,6 +29,7 @@ public class Main extends Application {
 
     public static String username;
     public static String password;
+    public static boolean isArtist;
 
 
     public Main() {
@@ -58,32 +59,32 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        try {
-            Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/mvcdb",
-                    "postgres", "postgres");
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM SONG;" );
-            while ( rs!=null && rs.next() ) {
-                String user = rs.getString("CUSTOMER");
-                String song = rs.getString("SONG");
-                System.out.println(song);
-            }
-            rs.close();
-            stmt.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-        System.out.println("Opened database successfully");
+        createTables();
+//        try {
+//            Class.forName("org.postgresql.Driver");
+//            c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/musicdb",
+//                    "postgres", "postgres");
+//            stmt = c.createStatement();
+//            ResultSet rs = stmt.executeQuery( "SELECT * FROM SONG;" );
+//            while ( rs!=null && rs.next() ) {
+//                String user = rs.getString("CUSTOMER");
+//                String song = rs.getString("SONG");
+//                System.out.println(song);
+//            }
+//            rs.close();
+//            stmt.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.err.println(e.getClass().getName()+": "+e.getMessage());
+//            System.exit(0);
+//        }
+//        System.out.println("Opened database successfully");
 //        launch(args);
         new Thread(()-> launch(args)).start();
 
         System.out.println("Authenticate through the app to continue...");
-        int a;
-        while(username == null){
+        while(username == null || password == null){
             try{
                 Thread.sleep(1000);
             }catch (Exception e){
@@ -106,5 +107,31 @@ public class Main extends Application {
 
     private void setStage(Stage stage) {
         Main.primaryStage = stage;
+    }
+
+    public static void createTables(){
+        System.out.println("Entered");
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                    "postgres", "postgres");
+            stmt = c.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS USERS(USERNAME TEXT PRIMARY KEY, PASSWORD TEXT, IS_ARTIST INTEGER);";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS SONGS(TITLE TEXT, ARTIST TEXT, ALBUM TEXT, WIDTH TEXT, DURATION TEXT, PRIMARY KEY(TITLE, ARTIST));";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST), CONSTRAINT  FK_USU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST));";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS(TAG TEXT PRIMARY KEY);";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS_PLAYLISTS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, TAG TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST, TAG), CONSTRAINT FK_USPU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USPS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST), CONSTRAINT FK_USPP FOREIGN KEY(TAG) REFERENCES PLAYLISTS(TAG));";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            System.out.println("Opened database successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
     }
 }

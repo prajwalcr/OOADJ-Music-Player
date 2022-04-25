@@ -22,6 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.CheckBox?>
 <AnchorPane fx:id="window" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1020.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.Controller">
     <children>
         <BorderPane layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" AnchorPane.topAnchor="40.0">
@@ -332,6 +333,8 @@
             <PasswordField fx:id="passwordField" layoutX="26.0" layoutY="267.0" />
             <TextField fx:id="usernameField" layoutX="26.0" layoutY="188.0" />
             <Button fx:id="loginButton" layoutX="74.0" layoutY="325.0" mnemonicParsing="false" text="Login" />
+            <CheckBox fx:id="artistCheckBox" layoutX="74.0" layoutY="300.0" text="Artist"/>
+            <Label fx:id="authFail" layoutX="55.0" layoutY="100.0" text="Invalid Credentials" visible="false" style="-fx-background-color: #ff1111"/>
          </children>
       </AnchorPane>
     </children>

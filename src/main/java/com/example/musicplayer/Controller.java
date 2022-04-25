@@ -31,6 +31,10 @@ import javafx.scene.media.MediaPlayer.Status;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +123,11 @@ public class Controller {
     @FXML
     private PasswordField passwordField;
 
+    @FXML
+    private CheckBox artistCheckBox;
+
+    @FXML
+    private Label authFail;
 
     @FXML
     private Stage stage;
@@ -141,6 +150,11 @@ public class Controller {
 
     private String username;
     private String password;
+
+    private boolean isArtist;
+
+    public Connection c = null;
+    public Statement stmt = null;
 
 
     public Controller() {
@@ -290,10 +304,16 @@ public class Controller {
         loginButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                boolean auth;
+                authFail.setVisible(false);
                 System.out.println(usernameField.getText()+passwordField.getText());
                 username = usernameField.getText();
                 password = passwordField.getText();
-                func(username, password);
+                isArtist = artistCheckBox.isSelected();
+                auth = authenticate(username, password, isArtist);
+                if(auth) {
+                    authNode.setVisible(false);
+                }
             }
         });
     }
@@ -477,9 +497,57 @@ public class Controller {
         this.main = main;
     }
 
-    public void func(String username, String password){
-        this.main.username = username;
-        this.main.password = password;
+    public boolean authenticate(String username, String password, boolean isArtist){
+        int temp = 0;
+        if(isArtist){
+            temp = 1;
+        }
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            String sql;
+            c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                    "postgres", "postgres");
+            stmt = c.createStatement();
+            ResultSet rs1 = stmt.executeQuery( "SELECT * FROM USERS WHERE USERNAME = \'" + username + "\';");
+
+            if(!rs1.next()){
+                System.out.println("inserting...");
+                sql = "INSERT INTO USERS VALUES(\'"+username+"\', \'"+password+"\', "+temp+");";
+                stmt.executeUpdate(sql);
+                this.main.username = username;
+                this.main.password = password;
+                this.main.isArtist = isArtist;
+                authFail.setVisible(false);
+                stmt.close();
+                rs1.close();
+                return true;
+            }
+            else {
+                ResultSet rs2 = stmt.executeQuery("SELECT * FROM USERS WHERE USERNAME = \'" + username + "\' AND PASSWORD = \'" + password + "\' AND IS_ARTIST = " + temp + ";");
+                if(!rs2.next()){
+                    authFail.setVisible(true);
+                    stmt.close();
+                    rs2.close();
+                    return false;
+                }
+                else{
+                    this.main.username = username;
+                    this.main.password = password;
+                    this.main.isArtist = isArtist;
+                    authFail.setVisible(false);
+                    stmt.close();
+                    rs2.close();
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+        authFail.setVisible(true);
+        return false;
     }
 
 
