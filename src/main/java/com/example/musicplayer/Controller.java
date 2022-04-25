@@ -98,7 +98,6 @@ public class Controller {
 
     @FXML
     private ImageView refresh;
-
     @FXML
     private ImageView playButton;
     @FXML

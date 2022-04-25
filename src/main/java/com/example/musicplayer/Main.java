@@ -43,6 +43,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         setStage(primaryStage);
+        // To change ktPLayer.fxml
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ktPlayer.fxml"));
         Parent root =(Parent) fxmlLoader.load();
         Controller controller = fxmlLoader.getController();
@@ -54,7 +55,7 @@ public class Main extends Application {
         scene.setFill(Color.TRANSPARENT);
 
 
-        primaryStage.setTitle("ktPlayer 0.1v");
+        primaryStage.setTitle("MusicPlayer");
         primaryStage.setScene(scene);
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setResizable(true);
@@ -125,8 +126,11 @@ public class Main extends Application {
                     Playlists p = new Playlists();
                     p.createPlaylist();
                     break;
-
+                case 3:
+                    // Change username
                 case 4:
+                    // Change Password
+                case 5:
                     System.exit(0);
                     break;
             }
@@ -162,6 +166,8 @@ public class Main extends Application {
             sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST), CONSTRAINT  FK_USU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST));";
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS(NAME TEXT, SONG TEXT, PODCAST TEXT, USERNAME TEXT);";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS ALBUMS(ARTISTNAME TEXT, SONG TEXT, ALBUMNAME TEXT);";
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS_PLAYLISTS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, TAG TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST, TAG), CONSTRAINT FK_USPU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USPS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST), CONSTRAINT FK_USPP FOREIGN KEY(TAG) REFERENCES PLAYLISTS(TAG));";
             stmt.executeUpdate(sql);
