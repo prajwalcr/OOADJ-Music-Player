@@ -35,12 +35,14 @@ class Artist extends ArtistAccount{
             Scanner ob = new Scanner(System.in);
             System.out.println("Enter Album Name");
             String aname = ob.nextLine();
-            int num = ob.nextInt();
+
             System.out.println("Enter Number of songs to put in album");
+            int num = ob.nextInt();
+            ob.nextLine();
             while(num > 0)
             {
                 // for \n
-                ob.nextLine();
+
                 System.out.println("Enter SongName");
                 String sng = ob.nextLine();
                 String sql = "INSERT INTO ALBUMS "+ "VALUES (" + "'"+  this.username + "',"+ "'" + sng + "'," + "'" + aname + "'" + ")";

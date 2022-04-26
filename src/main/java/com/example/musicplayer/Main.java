@@ -67,6 +67,8 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        UserAccount user = null;
+        ArtistAccount artist = null;
         createTables();
 //        try {
 //            Class.forName("org.postgresql.Driver");
@@ -100,6 +102,17 @@ public class Main extends Application {
             }
 
         }
+        if(isArtist){
+            artist = new Artist(username, password);
+        }
+        else{
+            if(isPremium){
+                user = new PremiumUser(username, password);
+            }
+            else{
+                user = new FreeUser(username, password);
+            }
+        }
         clearScreen();
         System.out.println("Welcome " + username);
         /*Menu Driven Section*/
@@ -111,7 +124,8 @@ public class Main extends Application {
         {
             System.out.println("1. Search");
             System.out.println("2. Create Playlist");
-            System.out.println("3. Exit");
+            System.out.println("3. Create Album");
+            System.out.println("4. Exit");
             System.out.println("Enter your choice");
             op = ob.nextInt();
             switch(op)
@@ -127,10 +141,18 @@ public class Main extends Application {
                     p.createPlaylist();
                     break;
                 case 3:
-                    // Change username
+                    if(!isArtist){
+                        System.out.println("Only Artists can create albums");
+                    }
+                    else{
+                        artist.createAlbum();
+                    }
+                    break;
                 case 4:
-                    // Change Password
+                    // Change username
                 case 5:
+                    // Change Password
+                case 6:
                     System.exit(0);
                     break;
             }
