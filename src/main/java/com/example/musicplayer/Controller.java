@@ -168,6 +168,7 @@ public class Controller {
         volume = 0.1;
         stage = Main.getStage();
         stage.getIcons().add(new Image(getClass().getResource("logo.png").toExternalForm()));
+
     }
 
     @FXML
@@ -340,6 +341,31 @@ public class Controller {
                 }
             }
         });
+
+        path = getClass().getResource("cancel.png").toExternalForm();
+        exit.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+                "-fx-background-position: center center; " +
+                "-fx-background-repeat: stretch;");
+//        path = getClass().getResource("back-arrows.png").toExternalForm();
+//        previousSongButton.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+//                "-fx-background-position: center center; " +
+//                "-fx-background-repeat: stretch;");
+//        path = getClass().getResource("forward-arrows.png").toExternalForm();
+//        exit.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+//                "-fx-background-position: center center; " +
+//                "-fx-background-repeat: stretch;");
+//        path = getClass().getResource("logo.png").toExternalForm();
+//        exit.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+//                "-fx-background-position: center center; " +
+//                "-fx-background-repeat: stretch;");
+        path = getClass().getResource("minimize.png").toExternalForm();
+        minimize.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+                "-fx-background-position: center center; " +
+                "-fx-background-repeat: stretch;");
+//        path = getClass().getResource("pause.png").toExternalForm();
+//        exit.setStyle("-fx-background-image: url(\"" + path + "\"); " +
+//                "-fx-background-position: center center; " +
+//                "-fx-background-repeat: stretch;");
     }
 
 
