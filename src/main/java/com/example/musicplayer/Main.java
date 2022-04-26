@@ -79,6 +79,35 @@ public class Main extends Application {
 
             stmt = c.createStatement();
             String sql = "UPDATE users set username =" + "'" + nw + "'" + " where username=" + "'" + old + "';";
+           // System.out.println(sql);
+            stmt.executeUpdate(sql);
+            c.commit();
+
+
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully");
+
+    }
+    public static void updatePassword(String nw, String user)
+    {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            //System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            String sql = "UPDATE users set password =" + "'" + nw + "'" + " where username=" + "'" + user + "';";
+            //System.out.println(sql);
             stmt.executeUpdate(sql);
             c.commit();
 
@@ -196,9 +225,12 @@ public class Main extends Application {
                 case 6:
                     // Change Username
                     String nw, old;
-                    old = username;
+                    ob.nextLine();
+                    System.out.println("Enter old username");
+                    old = ob.nextLine();
                     System.out.println("Enter new username");
                     nw = ob.nextLine();
+
                     if(isArtist)
                     {
 
@@ -215,6 +247,29 @@ public class Main extends Application {
                     updateUsername(old, nw);
                     break;
                 case 7:
+                    String nwp, oldp;
+                    ob.nextLine();
+                    System.out.println("Enter old password");
+                    oldp = ob.nextLine();
+                    System.out.println("Enter new password");
+                    nwp = ob.nextLine();
+
+                    if(isArtist)
+                    {
+
+                        artist.setPassword(nwp);
+                    }
+                    else{
+                        if(isPremium){
+                            user.setPassword(nwp);
+                        }
+                        else{
+                            user.setPassword(nwp);
+                        }
+                    }
+                    updatePassword(nwp, user.getUsername());
+                    break;
+                case 8:
                     System.exit(0);
                     break;
             }
@@ -247,13 +302,13 @@ public class Main extends Application {
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS PODCASTS(NAME TEXT, SPEAKER TEXT, DURATION TEXT, PRIMARY KEY(NAME, SPEAKER));";
             stmt.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST), CONSTRAINT  FK_USU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST));";
+            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST));";
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS PLAYLISTS(NAME TEXT, SONG TEXT, PODCAST TEXT, USERNAME TEXT);";
             stmt.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS ALBUMS(ARTISTNAME TEXT, SONG TEXT, ALBUMNAME TEXT);";
             stmt.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS_PLAYLISTS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, TAG TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST, TAG), CONSTRAINT FK_USPU FOREIGN KEY(USERNAME) REFERENCES USERS(USERNAME), CONSTRAINT FK_USPS FOREIGN KEY(TITLE, ARTIST) REFERENCES SONGS(TITLE, ARTIST), CONSTRAINT FK_USPP FOREIGN KEY(TAG) REFERENCES PLAYLISTS(TAG));";
+            sql = "CREATE TABLE IF NOT EXISTS USERS_SONGS_PLAYLISTS(USERNAME TEXT, TITLE TEXT, ARTIST TEXT, TAG TEXT, PRIMARY KEY(USERNAME, TITLE, ARTIST, TAG));";
             stmt.executeUpdate(sql);
             stmt.close();
             System.out.println("Opened database successfully");
