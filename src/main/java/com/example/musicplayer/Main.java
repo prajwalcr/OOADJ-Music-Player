@@ -65,7 +65,33 @@ public class Main extends Application {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+    public static void updateUsername(String old, String nw)
+    {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            //System.out.println("Opened database successfully");
 
+            stmt = c.createStatement();
+            String sql = "UPDATE users set username =" + "'" + nw + "'" + " where username=" + "'" + old + "';";
+            stmt.executeUpdate(sql);
+            c.commit();
+
+
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully");
+
+    }
     public static void main(String[] args) {
         UserAccount user = null;
         ArtistAccount artist = null;
@@ -102,7 +128,8 @@ public class Main extends Application {
             }
 
         }
-        if(isArtist){
+        if(isArtist)
+        {
             artist = new Artist(username, password);
         }
         else{
@@ -125,7 +152,11 @@ public class Main extends Application {
             System.out.println("1. Search");
             System.out.println("2. Create Playlist");
             System.out.println("3. Create Album");
-            System.out.println("4. Exit");
+            System.out.println("4. Display Album");
+            System.out.println("5. Display Playlist");
+            System.out.println("6. Change Username");
+            System.out.println("7. Change Password");
+            System.out.println("8. Exit");
             System.out.println("Enter your choice");
             op = ob.nextInt();
             switch(op)
@@ -149,14 +180,45 @@ public class Main extends Application {
                     }
                     break;
                 case 4:
-                    // Change username
+                    if(!isArtist)
+                    {
+                        System.out.println("Only Artists can create albums");
+                    }
+                    else{
+                        artist.displayAlbum();
+                    }
+                    break;
                 case 5:
-                    // Change Password
+                    // Create a Create Playlists
+                    Playlists p1 = new Playlists();
+                    p1.displayPlaylists(username);
+                    break;
                 case 6:
+                    // Change Username
+                    String nw, old;
+                    old = username;
+                    System.out.println("Enter new username");
+                    nw = ob.nextLine();
+                    if(isArtist)
+                    {
+
+                        artist.setUsername(nw);
+                    }
+                    else{
+                        if(isPremium){
+                            user.setUsername(nw);
+                        }
+                        else{
+                            user.setUsername(nw);
+                        }
+                    }
+                    updateUsername(old, nw);
+                    break;
+                case 7:
                     System.exit(0);
                     break;
             }
-        }while(op != 4);
+        }while(op != 8);
 
 
 

@@ -118,4 +118,41 @@ public class Playlists {
             num--;
         }
     }
+    public void displayPlaylists(String username)
+    {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/musicdb",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            //System.out.println("Opened database successfully");
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM PLAYLISTS;" );
+            System.out.println("Playlists");
+            System.out.println("Playlist Name" + "\t\t" + "Song" + "\t\t" + "Podcast" + "\t\t" + "Username");
+            while ( rs.next() ) {
+
+                String  artistname = rs.getString("name");
+                String  song = rs.getString("song");
+                String  podcast = rs.getString("podcast");
+                String  uname = rs.getString("username");
+                if(uname.equals(username))
+                {
+                    System.out.println(artistname + "\t\t" + song + "\t\t" + podcast + "\t\t" + username);
+                }
+
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+            System.exit(0);
+        }
+        //System.out.println("Operation done successfully");
+    }
 }
